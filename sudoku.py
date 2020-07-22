@@ -37,7 +37,7 @@ class SudokuGame(object):
         # produce board using randomized baseline pattern
         board = [[nums[self.__pattern(r, c)] for c in cols] for r in rows]
 
-        board = self.__clear_board(board, 60)
+        board = self.__clear_board(board, 40)
 
         return board
 
@@ -233,17 +233,17 @@ class SudokuUI(Frame):
         if not find:
             return True
         else:
-            self.row, self.col = find
+            row, col = find
 
         for i in range(1, 10):
-            if self.game.valid(self.game.puzzle, i, (self.row, self.col)):
-                self.game.puzzle[self.row][self.col] = i
+            if self.game.valid(self.game.puzzle, i, (row, col)):
+                self.game.puzzle[row][col] = i
                 self.__draw_puzzle()
 
                 if self.__solve():
                     return True
 
-                self.game.puzzle[self.row][self.col] = 0
+                self.game.puzzle[row][col] = 0
                 self.__draw_puzzle()
 
         return False
