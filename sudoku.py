@@ -1,11 +1,13 @@
 from tkinter import Tk, Canvas, Frame, Button, BOTH, TOP
 from random import sample
+import time
 
 MARGIN = 20 # Pixels around the board
 SIDE = 50 # Width of every board cell
 WIDTH = HEIGHT = MARGIN * 2 + SIDE * 9 # Width and height of the whole board
 BASE = 3
 WHOLE = BASE * BASE
+TIMETICK = 0.05 # Smaller number -> faster work of algorithm
 
 
 class SudokuGame(object):
@@ -37,7 +39,7 @@ class SudokuGame(object):
         # produce board using randomized baseline pattern
         board = [[nums[self.__pattern(r, c)] for c in cols] for r in rows]
 
-        board = self.__clear_board(board, 40)
+        board = self.__clear_board(board, 50)
 
         return board
 
@@ -155,13 +157,15 @@ class SudokuUI(Frame):
                     x = MARGIN + j * SIDE + SIDE / 2
                     y = MARGIN + i * SIDE + SIDE / 2
                     original = self.game.start_puzzle[i][j]
-                    color = "black" if answer == original else "sea green"
+                    color = "black" if answer == original else "green"
                     self.canvas.create_text(x, y, text=answer, tags="numbers", fill=color)
+        root.update_idletasks()
 
     def __clear_answers(self):
         self.game.start()
         self.canvas.delete("victory")
         self.canvas.delete("winner")
+        self.canvas.delete("cursor")
         self.__draw_puzzle()
 
     def __new_game(self):
@@ -169,6 +173,7 @@ class SudokuUI(Frame):
         self.game.start()
         self.canvas.delete("victory")
         self.canvas.delete("winner")
+        self.canvas.delete("cursor")
         self.__draw_puzzle()
 
     def __solve_game(self):
@@ -201,6 +206,14 @@ class SudokuUI(Frame):
             y1 = MARGIN + (self.row + 1) * SIDE - 1
             self.canvas.create_rectangle(x0, y0, x1, y1, outline="red", tags="cursor")
 
+    def __draw_cursor_backtracking(self, row, col, color):
+        if row >= 0 and col >= 0:
+            x0 = MARGIN + col * SIDE + 1
+            y0 = MARGIN + row * SIDE + 1
+            x1 = MARGIN + (col + 1) * SIDE - 1
+            y1 = MARGIN + (row + 1) * SIDE - 1
+            self.canvas.create_rectangle(x0, y0, x1, y1, outline=color, tags="cursor")
+
     def __key_pressed(self, event):
         if self.game.game_over:
             return
@@ -218,7 +231,7 @@ class SudokuUI(Frame):
         self.canvas.create_oval(x0, y0, x1, y1, tags="victory", fill="dark orange", outline="orange")
 
         x = y = MARGIN + 4 * SIDE + SIDE / 2
-        self.canvas.create_text(x, y, text="You win!", tags="winner", fill="white", font=("Arial", 32))
+        self.canvas.create_text(x, y, text="Congratulations!", tags="winner", fill="white", font=("Arial", 25))
 
     def __find_empty(self, board):
         for i in range(9):
@@ -239,12 +252,16 @@ class SudokuUI(Frame):
             if self.game.valid(self.game.puzzle, i, (row, col)):
                 self.game.puzzle[row][col] = i
                 self.__draw_puzzle()
+                self.__draw_cursor_backtracking(row, col, "green")
+                time.sleep(TIMETICK)
 
                 if self.__solve():
                     return True
 
                 self.game.puzzle[row][col] = 0
                 self.__draw_puzzle()
+                self.__draw_cursor_backtracking(row, col, "red")
+                time.sleep(TIMETICK)
 
         return False
 
