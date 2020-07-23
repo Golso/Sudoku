@@ -125,6 +125,8 @@ class SudokuUI(Frame):
         solve_button.pack(fill=BOTH)
         clear_button = Button(self, text="Clear answers", command=self.__clear_answers)
         clear_button.pack(fill=BOTH)
+        quit_button = Button(self, text="Quit", command=self.__quit_game)
+        quit_button.pack(fill=BOTH)
 
         self.__draw_grid()
         self.__draw_puzzle()
@@ -179,6 +181,9 @@ class SudokuUI(Frame):
     def __solve_game(self):
         self.__clear_answers()
         self.__solve()
+
+    def __quit_game(self):
+        exit()
 
     def __cell_clicked(self, event):
         if self.game.game_over:
@@ -272,6 +277,6 @@ if __name__ == '__main__':
 
     root = Tk()
     SudokuUI(root, game)
-    root.geometry("%dx%d" % (WIDTH, HEIGHT + 80))
+    root.geometry("%dx%d" % (WIDTH, HEIGHT + 105))
     root.eval('tk::PlaceWindow %s center' % root.winfo_toplevel())
     root.mainloop()
