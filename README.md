@@ -5,7 +5,7 @@ Simple sudoku game with backtracking algorithm.
 * [Technologies](#technologies)
 * [Sources](#sources)
 # General info
-![Sudoku](https://user-images.githubusercontent.com/36167926/131488613-9d9d4b12-263b-4dc9-ba56-343f4742cae2.JPG)
+![SudokuAnimation](https://user-images.githubusercontent.com/36167926/131862555-b93a0208-5100-4e93-8796-0bd0c996c95d.gif)
 # Technologies
 * Python 3
 * Tkinter
